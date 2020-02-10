@@ -39,12 +39,15 @@ public class ButtonsManager : MonoBehaviour
         switch (type)
         {
             case "Small":
+                _mainCanvas.UpdatePrice(20);
                 _cake.transform.localScale = new Vector3(15, 15, 15);
                 break;
             case "Medium":
+                _mainCanvas.UpdatePrice(21.5f);
                 _cake.transform.localScale = new Vector3(18, 18, 18);
                 break;
             case "Large":
+                _mainCanvas.UpdatePrice(23);
                 _cake.transform.localScale = new Vector3(21, 21, 21);
                 break;
             case "Choccolate":
@@ -65,7 +68,12 @@ public class ButtonsManager : MonoBehaviour
             case "Coffee":
                 _cakeMaterial.color = new Color32(99, 59, 41, 255);
                 break;
-
+            case "Strawberries":
+                _mainCanvas.AddTopping(1);
+                break;
+            case "Berries":
+                _mainCanvas.AddTopping(2);
+                break;
         }
         for (int i = 0; i < _buttonsImage.Count; i++)
         {

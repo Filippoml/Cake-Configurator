@@ -12,7 +12,6 @@ public class CustomProgressBar : MonoBehaviour
     [SerializeField]
     private List<Image> _backgroundPointsImages;
 
-
     private int _pointReached;
 
     private void Awake()
@@ -25,6 +24,9 @@ public class CustomProgressBar : MonoBehaviour
     {
         Image point = _backgroundPointsImages[_pointReached - 1];
         DOTween.To(() => point.fillAmount, x => point.fillAmount = x, 1, 0.2f);
+
+        Text text = point.transform.parent.GetChild(0).GetComponent<Text>();
+        text.color = point.color;
 
         _pointReached++;
 

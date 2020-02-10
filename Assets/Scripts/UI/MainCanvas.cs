@@ -11,12 +11,26 @@ public class MainCanvas : MonoBehaviour
     private int _selectedSectionIndex;
     private float _duration = 0.5f;
 
+    private float _price = 20;
+
     [SerializeField]
     private CustomProgressBar _progressBar;
+
+    [SerializeField]
+    private Text _priceText;
+
+    [SerializeField]
+    private Transform _toppingParent;
+
+    private GameObject _strawberriesResource, _berriesResource;
 
     private void Awake()
     {
         _selectedSectionIndex = 2;
+        _priceText.text = "Price: €" + _price.ToString("N2");
+
+        _strawberriesResource = Resources.Load<GameObject>("Prefabs/Strawberries");
+        _berriesResource = Resources.Load<GameObject>("Prefabs/Berries");
     }
 
     private void Start()
@@ -59,7 +73,6 @@ public class MainCanvas : MonoBehaviour
                 text.DOFade(0, _duration);
             }
         }
-
     }
 
     private void FadeIn()
@@ -76,16 +89,36 @@ public class MainCanvas : MonoBehaviour
             text.DOFade(1, _duration + 0.3f);
 
         }
-
     }
 
-    // Update is called once per frame
+    public void AddTopping(int numberTopping)
+    {
+        Debug.Log("test");
+        switch (numberTopping)
+        {
+            case 1:
+                Instantiate(_strawberriesResource, _toppingParent);
+                break;
+            case 2:
+                Instantiate(_berriesResource, _toppingParent);
+                break;
+            default:
+                Debug.LogError("error!");
+                break;
+        }
+    }
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.P))
         {
             FadeOut();
-
         }
+    }
+
+    public void UpdatePrice(float price)
+    {
+        _price = price;
+        _priceText.text = "Price: €" + _price.ToString("N2");
     }
 }

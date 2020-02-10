@@ -6,7 +6,7 @@ using System.Collections;
 public class Cake : MonoBehaviour
 {
 
-
+    private bool _mouseEntered;
 
     public Transform target;
 
@@ -51,16 +51,16 @@ public class Cake : MonoBehaviour
     Vector3 test;
     void Update()
     {
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButton(0) && _mouseEntered)
         {
             mPosDelta = Input.mousePosition - mPrevPos;
             velocityX += xSpeed * Input.GetAxis("Mouse X") * Time.deltaTime;
             velocityY += ySpeed * Input.GetAxis("Mouse Y") * Time.deltaTime;
-            var angle = Vector3.Cross(Vector3.up, transform.up);
+            var angle = Vector3.Cross(Vector3.up, target.transform.up);
 
             if (Mathf.Abs(angle.x) < 0.5f || oppositeSigns((int)provo, (int)velocityY))
             {
-                transform.Rotate(Camera.main.transform.right, velocityY, Space.World);
+                target.transform.Rotate(Camera.main.transform.right, velocityY, Space.World);
 
                 if (Mathf.Abs(angle.x) < 0.5f)
                 {
@@ -72,18 +72,18 @@ public class Cake : MonoBehaviour
         velocityZoom += ySpeed * Input.GetAxis("Mouse ScrollWheel") * Time.deltaTime;
 
 
-        if (Vector3.Dot(transform.up, Vector3.up) >= 0)
+        if (Vector3.Dot(target.transform.up, Vector3.up) >= 0)
         {
-            transform.Rotate(transform.up, -velocityX, Space.World);
+            target.transform.Rotate(target.transform.up, -velocityX, Space.World);
         }
         else
         {
-            transform.Rotate(transform.up, velocityX, Space.World);
+            target.transform.Rotate(target.transform.up, velocityX, Space.World);
         }
 
 
 
-        velocityX = Mathf.Lerp(velocityX, 0, Time.deltaTime * smoothTime);
+        velocityX = Mathf.Lerp(velocityX, 0.2f, Time.deltaTime * smoothTime);
         velocityY = Mathf.Lerp(velocityY, 0, Time.deltaTime * smoothTime);
         velocityZoom = Mathf.Lerp(velocityZoom, 0, Time.deltaTime * smoothTime);
 
@@ -103,5 +103,15 @@ public class Cake : MonoBehaviour
     bool oppositeSigns(int x, int y)
     {
         return (x ^ y) < 0;
+    }
+
+    public void OnMouseEnter()
+    {
+        _mouseEntered = true;
+    }
+
+    public void OnMouseExit()
+    {
+        _mouseEntered = false;
     }
 }
