@@ -20,15 +20,6 @@ public class CustomProgressBar : MonoBehaviour
         _pointReached = 1;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if(Input.GetKeyDown(KeyCode.O))
-        {
-            DOTween.To(() => _barFill.fillAmount, x => _barFill.fillAmount = x, 0.33f * _pointReached, 1).OnComplete(fillPoint);
-
-        }
-    }
 
     private void fillPoint()
     {
@@ -37,5 +28,10 @@ public class CustomProgressBar : MonoBehaviour
 
         _pointReached++;
 
+    }
+
+    public void FillToNextPoint()
+    {
+        DOTween.To(() => _barFill.fillAmount, x => _barFill.fillAmount = x, 0.33f * _pointReached, 1).OnComplete(fillPoint);
     }
 }

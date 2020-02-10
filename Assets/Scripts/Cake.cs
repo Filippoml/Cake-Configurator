@@ -43,6 +43,9 @@ public class Cake : MonoBehaviour
         rotationXAxis = angles.x;
 
         prova = transform.up;
+
+        transform.position = transform.position + offset;
+
     }
 
     Vector3 test;
@@ -67,7 +70,6 @@ public class Cake : MonoBehaviour
             //Debug.Log(Mathf.Abs(angle.x));
         }
         velocityZoom += ySpeed * Input.GetAxis("Mouse ScrollWheel") * Time.deltaTime;
-        transform.position = transform.position - Camera.main.transform.forward *2 * velocityZoom;
 
 
         if (Vector3.Dot(transform.up, Vector3.up) >= 0)

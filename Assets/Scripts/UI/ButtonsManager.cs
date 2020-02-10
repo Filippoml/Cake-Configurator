@@ -11,6 +11,11 @@ public class ButtonsManager : MonoBehaviour
     private Image _nextButton;
     private MainCanvas _mainCanvas;
 
+    [SerializeField]
+    private GameObject _cake;
+
+    private Material _cakeMaterial;
+
     private void Awake()
     {
         _buttonsImage = new List<Image>();
@@ -26,10 +31,42 @@ public class ButtonsManager : MonoBehaviour
         }
         _nextButton = transform.GetChild(transform.childCount - 1).GetComponent<Image>();
 
+        _cakeMaterial = _cake.GetComponent<MeshRenderer>().material;
     }
 
-    public void SetActiveButton(int buttonIndex)
+    public void SetActiveButton(int buttonIndex, string type)
     {
+        switch (type)
+        {
+            case "Small":
+                _cake.transform.localScale = new Vector3(15, 15, 15);
+                break;
+            case "Medium":
+                _cake.transform.localScale = new Vector3(18, 18, 18);
+                break;
+            case "Large":
+                _cake.transform.localScale = new Vector3(21, 21, 21);
+                break;
+            case "Choccolate":
+                _cakeMaterial.color = new Color32(106, 51, 17, 255);
+                break;
+            case "Lemon":
+                _cakeMaterial.color = new Color32(255, 212, 33, 255);
+                break;
+            case "Strawberry":
+                _cakeMaterial.color = new Color32(233, 72, 60, 255);
+                break;
+            case "Cream":
+                _cakeMaterial.color = new Color32(255, 255, 255, 255);
+                break;
+            case "Pistachio":
+                _cakeMaterial.color = new Color32(101, 219, 85, 255);
+                break;
+            case "Coffee":
+                _cakeMaterial.color = new Color32(99, 59, 41, 255);
+                break;
+
+        }
         for (int i = 0; i < _buttonsImage.Count; i++)
         {
             Image selectedButton = _buttonsImage[i];

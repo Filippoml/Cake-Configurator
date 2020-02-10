@@ -11,14 +11,17 @@ public class MainCanvas : MonoBehaviour
     private int _selectedSectionIndex;
     private float _duration = 0.5f;
 
+    [SerializeField]
+    private CustomProgressBar _progressBar;
+
     private void Awake()
     {
-        _selectedSectionIndex = 1;
+        _selectedSectionIndex = 2;
     }
 
     private void Start()
     {
-        for(int i = 2; i < transform.childCount; i++)
+        for (int i = _selectedSectionIndex + 1; i < transform.childCount; i++)
         {
             foreach (Image image in transform.GetChild(i).GetComponentsInChildren<Image>())
             {
@@ -35,6 +38,8 @@ public class MainCanvas : MonoBehaviour
 
     public void FadeOut()
     {
+        _progressBar.FillToNextPoint();
+
         foreach (Image image in transform.GetChild(_selectedSectionIndex).GetComponentsInChildren<Image>())
         {
             image.DOFade(0, _duration);
