@@ -8,21 +8,24 @@ using UnityEngine.UI;
 
 public class CustomButton : MonoBehaviour
 {
-    private int _buttonNumber;
+    public bool IsActive { get; set; }
+    public int ButtonNumber;
+    public string Text { get; set; }
+
+
     private ButtonsManager _buttonsManager;
-    private string _text;
 
     private void Awake()
     {
         _buttonsManager = transform.parent.GetComponent<ButtonsManager>();
-        Int32.TryParse(Regex.Match(name, @"\d+").Value, out _buttonNumber);
-        _text = GetComponentInChildren<Text>().text;
-        _text = _text.Split(' ').First();
+        Int32.TryParse(Regex.Match(name, @"\d+").Value, out ButtonNumber);
+        Text = GetComponentInChildren<Text>().text;
+        Text = Text.Split(' ').First();
     }
 
     public void OnClick()
     {
-        _buttonsManager.SetActiveButton(_buttonNumber, _text);
+        _buttonsManager.SetActiveButton(this);
     }
 
     public void OnNextClick()
@@ -30,5 +33,9 @@ public class CustomButton : MonoBehaviour
         _buttonsManager.Next();
     }
 
+    public void OnPreviusClick()
+    {
+        _buttonsManager.Previus();
+    }
 
 }

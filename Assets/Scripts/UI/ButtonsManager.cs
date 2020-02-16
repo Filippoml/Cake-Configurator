@@ -8,16 +8,22 @@ public class ButtonsManager : MonoBehaviour
 {
     private List<Image> _buttonsImage;
     private Sprite _spriteActive, _spriteUnactive;
-    private Image _nextButton;
+    private Image _previusButton,_nextButton;
     private MainCanvas _mainCanvas;
 
     [SerializeField]
     private GameObject _cake;
 
+    private int _cakeSize;
+
+    [SerializeField]
+    private bool _canSelectMoreThanOne;
+
     private Material _cakeMaterial;
 
     private void Awake()
     {
+        _cakeSize = 1;
         _buttonsImage = new List<Image>();
 
         _spriteActive = Resources.Load<Sprite>("Sprites/SelectedButton");
@@ -25,29 +31,49 @@ public class ButtonsManager : MonoBehaviour
         _mainCanvas = transform.parent.parent.GetComponent<MainCanvas>();
 
 
-        for (int i = 0; i < transform.childCount - 1; i++)
+        for (int i = 0; i < transform.childCount - 2; i++)
         {
             _buttonsImage.Add(transform.GetChild(i).GetComponent<Image>());
         }
+        _previusButton = transform.GetChild(transform.childCount - 2).GetComponent<Image>();
         _nextButton = transform.GetChild(transform.childCount - 1).GetComponent<Image>();
 
         _cakeMaterial = _cake.GetComponent<MeshRenderer>().material;
     }
 
-    public void SetActiveButton(int buttonIndex, string type)
+    public void SetActiveButton(CustomButton button)
     {
-        switch (type)
+        switch (button.Text)
         {
             case "Small":
-                _mainCanvas.UpdatePrice(20);
                 _cake.transform.localScale = new Vector3(15, 15, 15);
+                if (!button.IsActive)
+                {
+                    _mainCanvas.UpdatePriceAdd(-1.5f * (_cakeSize - 1));
+                    _cakeSize = 1;
+                }
                 break;
             case "Medium":
-                _mainCanvas.UpdatePrice(21.5f);
+                if (!button.IsActive)
+                {
+                    if (_cakeSize < 2)
+                    {
+                        _mainCanvas.UpdatePriceAdd(1.5f);
+                    }
+                    else
+                    {
+                        _mainCanvas.UpdatePriceAdd(-1.5f);
+                    }
+                    _cakeSize = 2;
+                }
                 _cake.transform.localScale = new Vector3(18, 18, 18);
                 break;
             case "Large":
-                _mainCanvas.UpdatePrice(23);
+                if (!button.IsActive)
+                {
+                    _mainCanvas.UpdatePriceAdd(1.5f * (3 - _cakeSize));
+                    _cakeSize = 3;
+                }
                 _cake.transform.localScale = new Vector3(21, 21, 21);
                 break;
             case "Choccolate":
@@ -69,23 +95,56 @@ public class ButtonsManager : MonoBehaviour
                 _cakeMaterial.color = new Color32(99, 59, 41, 255);
                 break;
             case "Strawberries":
-                _mainCanvas.AddTopping(1);
+                if (button.IsActive)
+                {
+                    _mainCanvas.RemoveTopping(0);
+                    _mainCanvas.UpdatePriceAdd(-2.5f);
+                }
+                else
+                {
+                    _mainCanvas.AddTopping(0);
+                    _mainCanvas.UpdatePriceAdd(2.5f);
+
+                }
                 break;
             case "Berries":
-                _mainCanvas.AddTopping(2);
+                if(button.IsActive)
+                {
+                    _mainCanvas.RemoveTopping(1);
+                    _mainCanvas.UpdatePriceAdd(-2.5f);
+
+                }
+                else
+                {
+                    _mainCanvas.AddTopping(1);
+                    _mainCanvas.UpdatePriceAdd(2.5f);
+
+                }
                 break;
         }
+
         for (int i = 0; i < _buttonsImage.Count; i++)
         {
             Image selectedButton = _buttonsImage[i];
-            if (i == buttonIndex)
+            if (i == button.ButtonNumber)
             {
-                selectedButton.sprite = _spriteActive;
-                selectedButton.color = new Color32(255, 236, 229, 100);
+                if(_canSelectMoreThanOne && selectedButton.color == new Color32(255, 236, 229, 255))
+                {
+                    selectedButton.sprite = _spriteUnactive;
+                    selectedButton.gameObject.GetComponent<CustomButton>().IsActive = false;
+                    selectedButton.color = new Color32(230, 230, 230, 255);
+                }
+                else
+                {
+                    selectedButton.sprite = _spriteActive;
+                    selectedButton.gameObject.GetComponent<CustomButton>().IsActive = true;
+                    selectedButton.color = new Color32(255, 236, 229, 255);
+                }
             }
-            else
+            else if (!_canSelectMoreThanOne && _buttonsImage[i].gameObject != _previusButton)
             {
                 selectedButton.sprite = _spriteUnactive;
+                selectedButton.gameObject.GetComponent<CustomButton>().IsActive = false;
                 selectedButton.color = new Color32(230, 230, 230, 255);
             }
         }
@@ -97,7 +156,12 @@ public class ButtonsManager : MonoBehaviour
     {
         if(_nextButton.color == new Color32(240, 99, 43, 255))
         {
-            _mainCanvas.FadeOut();
+            _mainCanvas.FadeOut(true);
         }
+    }
+
+    public void Previus()
+    {
+        _mainCanvas.FadeOut(false);
     }
 }

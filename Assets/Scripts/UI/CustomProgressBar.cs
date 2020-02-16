@@ -16,24 +16,57 @@ public class CustomProgressBar : MonoBehaviour
 
     private void Awake()
     {
-        _pointReached = 1;
     }
 
 
-    private void fillPoint()
+    public void FillPoint(bool next)
     {
-        Image point = _backgroundPointsImages[_pointReached - 1];
-        DOTween.To(() => point.fillAmount, x => point.fillAmount = x, 1, 0.2f);
+        Image point = null;
+        if (next)
+        {
+            point = _backgroundPointsImages[_pointReached - 1];
 
-        Text text = point.transform.parent.GetChild(0).GetComponent<Text>();
-        text.color = point.color;
+            DOTween.To(() => point.fillAmount, x => point.fillAmount = x, 1, 0.2f);
+            Text text = point.transform.parent.GetChild(0).GetComponent<Text>();
+            text.color = point.color;
+        }
+        else
+        {
+            _pointReached--;
+            point = _backgroundPointsImages[_pointReached];
 
-        _pointReached++;
+            DOTween.To(() => point.fillAmount, x => point.fillAmount = x, 0, 0.2f).OnComplete(() => { FillToPoint(next); });
+            Text text = point.transform.parent.GetChild(0).GetComponent<Text>();
+            text.color = new Color32(135, 135, 135, 255);
+        }
+
 
     }
 
-    public void FillToNextPoint()
+    public void FillToPoint(bool next)
     {
-        DOTween.To(() => _barFill.fillAmount, x => _barFill.fillAmount = x, 0.33f * _pointReached, 1).OnComplete(fillPoint);
+        if (next)
+        {
+            _pointReached++;
+
+            DOTween.To(() => _barFill.fillAmount, x => _barFill.fillAmount = x, 0.33f * _pointReached, 1).OnComplete(() => { FillPoint(next); });
+        }
+        else
+        {
+            DOTween.To(() => _barFill.fillAmount, x => _barFill.fillAmount = x, 0.33f * _pointReached, 1);
+        }
+    }
+
+    public void SetFilledPoint(int pointNum)
+    {
+        for(int i = _pointReached; i <= pointNum; i++)
+        {
+            Image point = _backgroundPointsImages[i - 1];
+            point.fillAmount = 1;
+            Text text = point.transform.parent.GetChild(0).GetComponent<Text>();
+            text.color = point.color;
+        }
+        _barFill.fillAmount = 0.33f * pointNum;
+
     }
 }
