@@ -14,11 +14,6 @@ public class CustomProgressBar : MonoBehaviour
 
     private int _pointReached;
 
-    private void Awake()
-    {
-    }
-
-
     public void FillPoint(bool next)
     {
         Image point = null;
@@ -39,8 +34,6 @@ public class CustomProgressBar : MonoBehaviour
             Text text = point.transform.parent.GetChild(0).GetComponent<Text>();
             text.color = new Color32(135, 135, 135, 255);
         }
-
-
     }
 
     public void FillToPoint(bool next)
@@ -67,6 +60,5 @@ public class CustomProgressBar : MonoBehaviour
             text.color = point.color;
         }
         _barFill.fillAmount = 0.33f * pointNum;
-
     }
 }

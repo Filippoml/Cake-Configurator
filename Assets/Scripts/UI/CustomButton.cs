@@ -12,12 +12,14 @@ public class CustomButton : MonoBehaviour
     public int ButtonNumber;
     public string Text { get; set; }
 
-
     private ButtonsManager _buttonsManager;
 
     private void Awake()
     {
         _buttonsManager = transform.parent.GetComponent<ButtonsManager>();
+
+        //Get Number from string
+        //Example: "Hello 123" => "123"
         Int32.TryParse(Regex.Match(name, @"\d+").Value, out ButtonNumber);
         Text = GetComponentInChildren<Text>().text;
         Text = Text.Split(' ').First();
@@ -37,5 +39,4 @@ public class CustomButton : MonoBehaviour
     {
         _buttonsManager.Previus();
     }
-
 }

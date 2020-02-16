@@ -23,10 +23,6 @@ public class MainCanvas : MonoBehaviour
     [SerializeField]
     private Transform _toppingParent;
 
-    private GameObject _strawberriesResource, _berriesResource;
-
-    private GameObject[] _toppings;
-
     private void Awake()
     {
         _selectedSectionIndex = 2;
@@ -35,11 +31,6 @@ public class MainCanvas : MonoBehaviour
         {
             _priceText.text = "Price: €" + _price.ToString("N2");
         }
-
-        _strawberriesResource = Resources.Load<GameObject>("Prefabs/Strawberries");
-        _berriesResource = Resources.Load<GameObject>("Prefabs/Berries");
-
-        _toppings = new GameObject[2];
     }
 
     private void showPanel(int panel)
@@ -76,7 +67,6 @@ public class MainCanvas : MonoBehaviour
         foreach (Text text in transform.GetChild(panel).GetComponentsInChildren<Text>())
         {
             text.DOFade(1, 0.1f);
-
         }
     }
 
@@ -162,15 +152,6 @@ public class MainCanvas : MonoBehaviour
     public void RemoveTopping(int numberTopping)
     {
         _toppingParent.GetChild(numberTopping).gameObject.SetActive(false);
-
-    }
-
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-
-        }
     }
 
     public void UpdatePrice(float price)
